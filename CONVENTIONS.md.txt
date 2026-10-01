@@ -1,0 +1,256 @@
+# CONVENTIONS.md
+
+## Objetivo
+
+Este proyecto es un MVP para validar que los pacientes desean reservar citas médicas por Internet.
+
+La prioridad es:
+
+1. Entregar funcionalidades rápidamente.
+2. Mantener el código fácil de entender.
+3. Evitar sobrearquitectura.
+4. Permitir evolucionar el sistema sin grandes refactorizaciones.
+
+Ante cualquier duda, elegir siempre la solución más simple que cumpla los requisitos actuales.
+
+---
+
+# Arquitectura
+
+El sistema está construido como un:
+
+- Modular Monolith
+- ASP.NET Core MVC
+- EF Core
+- SQL Server
+- Vertical Slice Architecture
+
+---
+
+# Módulos de negocio
+
+Todo el código debe pertenecer a un módulo de negocio.
+
+Actualmente existen tres módulos:
+
+```text
+CatalogoMedico
+AgendaMedica
+Reservas
+```
+
+## CatalogoMedico
+
+Responsable de:
+
+- Especialidades médicas
+- Médicos
+- Relación médico-especialidad
+
+## AgendaMedica
+
+Responsable de:
+
+- Disponibilidad
+- Horarios
+- Agenda de médicos
+
+## Reservas
+
+Responsable de:
+
+- Reservar citas
+- Confirmar reservas
+- Consultar citas
+
+---
+
+# Organización por Vertical Slices
+
+Cada caso de uso debe tener su propia carpeta.
+
+Ejemplo:
+
+```text
+Reservas
+└── Features
+    └── BookAppointment
+        ├── BookAppointmentCommand.cs
+        ├── BookAppointmentHandler.cs
+        └── BookAppointmentValidator.cs
+```
+
+El código necesario para ejecutar un caso de uso debe vivir junto.
+
+Evitar carpetas globales como:
+
+```text
+Commands
+Handlers
+Validators
+Services
+```
+
+a nivel de aplicación.
+
+---
+
+# Separación de lectura y escritura
+
+Usar CQRS de forma simple.
+
+## Commands
+
+Modifican estado.
+
+Ejemplos:
+
+```text
+CreateDoctorCommand
+RegisterAvailabilityCommand
+BookAppointmentCommand
+```
+
+## Queries
+
+Obtienen información.
+
+Ejemplos:
+
+```text
+GetSpecialtiesQuery
+GetDoctorAvailabilityQuery
+GetAppointmentsQuery
+```
+
+Regla:
+
+```text
+Command = escribe
+
+Query = lee
+```
+
+---
+
+# Estructura sugerida
+
+```text
+Modules
+│
+├── CatalogoMedico
+│   ├── Features
+│   └── Persistence
+│
+├── AgendaMedica
+│   ├── Features
+│   └── Persistence
+│
+└── Reservas
+    ├── Features
+    └── Persistence
+```
+
+Agregar nuevas carpetas únicamente cuando exista una necesidad real.
+
+---
+
+# EF Core
+
+Usar Fluent API para la configuración de entidades.
+
+Ejemplo:
+
+```text
+Persistence
+├── DoctorConfiguration.cs
+├── AvailabilityConfiguration.cs
+└── AppointmentConfiguration.cs
+```
+
+Evitar colocar detalles de persistencia dentro de las entidades cuando sea posible.
+
+---
+
+# Dependencias
+
+Mantener los módulos desacoplados.
+
+Reglas:
+
+- Evitar dependencias circulares.
+- No acceder directamente a detalles internos de otro módulo.
+- La comunicación entre módulos debe realizarse mediante contratos claros o consultas específicas.
+
+---
+
+# Validación
+
+La validación debe vivir junto al caso de uso.
+
+Ejemplo:
+
+```text
+BookAppointment
+├── Command
+├── Validator
+└── Handler
+```
+
+No crear una carpeta global de validaciones.
+
+---
+
+# Abstracciones
+
+No introducir abstracciones prematuramente.
+
+No crear por defecto:
+
+```text
+GenericRepository
+BaseRepository
+BaseService
+BaseEntity
+AbstractHandler
+```
+
+Solo introducir una abstracción cuando exista duplicación real o una necesidad claramente demostrada.
+
+---
+
+# Principios de desarrollo
+
+Antes de crear una nueva clase, carpeta o patrón, preguntarse:
+
+"¿Resuelve un problema actual o uno hipotético?"
+
+Si el problema es hipotético, no implementar la abstracción.
+
+Preferir:
+
+```text
+Código simple
+```
+
+sobre:
+
+```text
+Código extremadamente flexible
+```
+
+para escenarios que todavía no existen.
+
+---
+
+# Regla principal
+
+Este proyecto es un MVP.
+
+Optimizar para:
+
+- Simplicidad
+- Claridad
+- Velocidad de entrega
+
+No optimizar para problemas futuros que todavía no existen.
