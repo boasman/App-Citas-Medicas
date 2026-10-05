@@ -11,6 +11,11 @@
         <p class="specialties-intro">Selecciona una fecha y una hora disponible para tu cita.</p>
     </div>
 
+    @if (TempData["AvailabilityMessage"] is string availabilityMessage)
+    {
+        <div class="selection-confirmation" role="status">@availabilityMessage</div>
+    }
+
     @if (Model.Message is not null)
     {
         <div class="selection-confirmation" role="status">

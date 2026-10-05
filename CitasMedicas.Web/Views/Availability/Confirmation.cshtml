@@ -1,0 +1,22 @@
+@model CitasMedicas.Web.Modules.Reservas.Features.BookAppointment.AppointmentConfirmationViewModel
+@{
+    ViewData["Title"] = "Cita confirmada";
+}
+
+<section class="specialties-page availability-page">
+    <div class="selection-confirmation" role="status">
+        <span class="confirmation-icon" aria-hidden="true">✓</span>
+        <span>Tu cita se ha reservado correctamente.</span>
+    </div>
+    <div class="specialties-heading">
+        <p class="eyebrow">@Model.SpecialtyName</p>
+        <h1>Cita confirmada</h1>
+        <p class="specialties-intro">Hemos reservado tu cita con @Model.DoctorName.</p>
+    </div>
+    <div class="empty-state">
+        <h2>@Model.StartsAt.ToString("dddd d 'de' MMMM, HH:mm")</h2>
+        <p>Paciente: @Model.PatientName</p>
+        <p>Confirmación: @Model.PatientEmail</p>
+    </div>
+    <a class="back-link" asp-controller="Specialties" asp-action="Index">Volver a especialidades</a>
+</section>
