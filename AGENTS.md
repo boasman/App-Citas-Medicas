@@ -28,3 +28,16 @@ The available history contains only the initial commit, so no established commit
 ## Configuration
 
 Keep secrets and machine-specific values out of committed `appsettings*.json`; use .NET user secrets or environment variables for local credentials. Preserve the MVP priorities in `CONVENTIONS.md.txt`: clarity, small changes, and only abstractions justified by current needs.
+
+## Git Workflow
+
+- El repositorio de GitHub de este Proyecto es: `https://github.com/boasman/App-Citas-Medicas`
+- Nunca trabaje directamente sobre 'main'
+- Antes de implementar cualquier feature, bugfix o issue, verifica la rama actual, 
+- Si la rama actual es `main`, crea una rama antes de realizer cualquier cambio
+- Usa nombres descriptivos 
+	- feature/<descripcion>
+	- fix/<descripcion>
+	- refactor/<descripcion>
+- Realiza todo los commits en la Nueva rama.
+- nunca haga push directo a `main`
