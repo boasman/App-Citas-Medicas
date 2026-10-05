@@ -1,0 +1,53 @@
+@model CitasMedicas.Web.Modules.CatalogoMedico.Features.ListSpecialties.SpecialtiesViewModel
+@{
+    ViewData["Title"] = "Especialidades médicas";
+}
+
+<section class="specialties-page">
+    <div class="specialties-heading">
+        <p class="eyebrow">Citas Médicas</p>
+        <h1>Encuentra la atención que necesitas</h1>
+        <p class="specialties-intro">Explora nuestras especialidades y elige la que mejor se ajuste a tu consulta.</p>
+        <a class="create-specialty-link" asp-action="Create">+ Crear especialidad</a>
+    </div>
+
+    @if (TempData["SuccessMessage"] is string successMessage)
+    {
+        <div class="selection-confirmation" role="status">@successMessage</div>
+    }
+
+    @if (Model.SelectedSpecialty is not null)
+    {
+        <div class="selection-confirmation" role="status">
+            <span class="confirmation-icon" aria-hidden="true">✓</span>
+            <span>Seleccionaste <strong>@Model.SelectedSpecialty.Name</strong>.</span>
+        </div>
+    }
+
+    @if (Model.Specialties.Count == 0)
+    {
+        <div class="empty-state" role="status">
+            <h2>Por el momento no hay especialidades disponibles</h2>
+            <p>Vuelve a consultar más adelante. Estamos trabajando para ofrecerte atención pronto.</p>
+        </div>
+    }
+    else
+    {
+        <div class="specialty-grid">
+            @foreach (var specialty in Model.Specialties)
+            {
+                <article class="specialty-card">
+                    <div class="specialty-icon" aria-hidden="true">✚</div>
+                    <h2>@specialty.Name</h2>
+                    <p>@specialty.Description</p>
+                    <form asp-action="Select" method="post">
+                        <input type="hidden" name="id" value="@specialty.Id" />
+                        <button class="select-specialty" type="submit" aria-label="Seleccionar @specialty.Name">
+                            Seleccionar <span aria-hidden="true">→</span>
+                        </button>
+                    </form>
+                </article>
+            }
+        </div>
+    }
+</section>
