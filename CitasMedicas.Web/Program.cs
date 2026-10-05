@@ -1,5 +1,6 @@
 using CitasMedicas.Web.Modules.CatalogoMedico.Persistence;
 using Microsoft.EntityFrameworkCore;
+using CitasMedicas.Web.Modules.AgendaMedica.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ builder.Services.AddDbContext<CatalogoMedicoDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("CitasMedicas")));
 builder.Services.AddScoped<CitasMedicas.Web.Modules.CatalogoMedico.Features.ListSpecialties.ListSpecialtiesQuery>();
 builder.Services.AddScoped<CitasMedicas.Web.Modules.CatalogoMedico.Features.CreateSpecialty.CreateSpecialtyCommand>();
+builder.Services.AddScoped<CitasMedicas.Web.Modules.AgendaMedica.Features.GetDoctorAvailability.GetDoctorAvailabilityQuery>();
 
 var app = builder.Build();
 
@@ -16,6 +18,69 @@ await using (var scope = app.Services.CreateAsyncScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<CatalogoMedicoDbContext>();
     await dbContext.Database.EnsureCreatedAsync();
+    await dbContext.Database.ExecuteSqlRawAsync("""
+        IF SCHEMA_ID(N'AgendaMedica') IS NULL EXEC(N'CREATE SCHEMA [AgendaMedica]');
+        IF OBJECT_ID(N'[AgendaMedica].[Doctors]', N'U') IS NULL
+        BEGIN
+            CREATE TABLE [AgendaMedica].[Doctors] (
+                [Id] int IDENTITY(1,1) NOT NULL CONSTRAINT [PK_Doctors] PRIMARY KEY,
+                [Name] nvarchar(150) NOT NULL,
+                [SpecialtyName] nvarchar(100) NOT NULL
+            );
+            CREATE INDEX [IX_Doctors_SpecialtyName] ON [AgendaMedica].[Doctors] ([SpecialtyName]);
+        END;
+        IF OBJECT_ID(N'[AgendaMedica].[AppointmentSlots]', N'U') IS NULL
+        BEGIN
+            CREATE TABLE [AgendaMedica].[AppointmentSlots] (
+                [Id] int IDENTITY(1,1) NOT NULL CONSTRAINT [PK_AppointmentSlots] PRIMARY KEY,
+                [DoctorId] int NOT NULL,
+                [StartsAt] datetime2 NOT NULL,
+                [IsOccupied] bit NOT NULL,
+                CONSTRAINT [FK_AppointmentSlots_Doctors_DoctorId] FOREIGN KEY ([DoctorId]) REFERENCES [AgendaMedica].[Doctors] ([Id]) ON DELETE CASCADE
+            );
+            CREATE UNIQUE INDEX [IX_AppointmentSlots_DoctorId_StartsAt] ON [AgendaMedica].[AppointmentSlots] ([DoctorId], [StartsAt]);
+        END;
+        """);
+    if (!await dbContext.Doctors.AnyAsync())
+    {
+        var doctors = new[]
+        {
+            new Doctor { Name = "Dra. Ana Martínez", SpecialtyName = "Cardiología" },
+            new Doctor { Name = "Dr. Luis Fernández", SpecialtyName = "Dermatología" },
+            new Doctor { Name = "Dra. Sofía Ramírez", SpecialtyName = "Medicina general" },
+            new Doctor { Name = "Dr. Pablo Torres", SpecialtyName = "Pediatría" },
+            new Doctor { Name = "Dra. Elena Ruiz", SpecialtyName = "Traumatología" }
+        };
+        dbContext.Doctors.AddRange(doctors);
+        await dbContext.SaveChangesAsync();
+
+        var firstDay = DateTime.Today.AddDays(1);
+        var slots = new List<AppointmentSlot>();
+        foreach (var (doctor, index) in doctors.Select((doctor, index) => (doctor, index)))
+        {
+            for (var day = 0; day < 21; day++)
+            {
+                var date = firstDay.AddDays(day);
+                if (date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
+                {
+                    continue;
+                }
+
+                foreach (var time in new[] { new TimeSpan(9, 0, 0), new TimeSpan(10, 0, 0), new TimeSpan(11, 30, 0), new TimeSpan(14, 0, 0), new TimeSpan(15, 0, 0) })
+                {
+                    slots.Add(new AppointmentSlot
+                    {
+                        DoctorId = doctor.Id,
+                        StartsAt = date.Add(time),
+                        IsOccupied = day % 4 == 0 && time.Hours == 10 || day == index && time.Hours == 14
+                    });
+                }
+            }
+        }
+
+        dbContext.AppointmentSlots.AddRange(slots);
+        await dbContext.SaveChangesAsync();
+    }
 }
 
 // Configure the HTTP request pipeline.

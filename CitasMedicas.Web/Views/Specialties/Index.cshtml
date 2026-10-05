@@ -40,12 +40,9 @@
                     <div class="specialty-icon" aria-hidden="true">✚</div>
                     <h2>@specialty.Name</h2>
                     <p>@specialty.Description</p>
-                    <form asp-action="Select" method="post">
-                        <input type="hidden" name="id" value="@specialty.Id" />
-                        <button class="select-specialty" type="submit" aria-label="Seleccionar @specialty.Name">
-                            Seleccionar <span aria-hidden="true">→</span>
-                        </button>
-                    </form>
+                    <a class="select-specialty" asp-action="Doctors" asp-route-specialtyId="@specialty.Id" aria-label="Seleccionar @specialty.Name">
+                        Ver profesionales <span aria-hidden="true">→</span>
+                    </a>
                 </article>
             }
         </div>

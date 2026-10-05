@@ -1,18 +1,36 @@
 using CitasMedicas.Web.Modules.CatalogoMedico.Features.ListSpecialties;
 using CitasMedicas.Web.Modules.CatalogoMedico.Features.CreateSpecialty;
+using CitasMedicas.Web.Modules.AgendaMedica.Features.GetDoctorAvailability;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CitasMedicas.Web.Controllers;
 
 public class SpecialtiesController(
     ListSpecialtiesQuery listSpecialties,
-    CreateSpecialtyCommand createSpecialty) : Controller
+    CreateSpecialtyCommand createSpecialty,
+    GetDoctorAvailabilityQuery doctorAvailability) : Controller
 {
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
         return View(new SpecialtiesViewModel
         {
             Specialties = await listSpecialties.ExecuteAsync(cancellationToken)
+        });
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Doctors(int specialtyId, CancellationToken cancellationToken)
+    {
+        var specialty = await listSpecialties.FindByIdAsync(specialtyId, cancellationToken);
+        if (specialty is null)
+        {
+            return NotFound();
+        }
+
+        return View(new DoctorListViewModel
+        {
+            Specialty = specialty,
+            Doctors = await doctorAvailability.ListDoctorsAsync(specialty.Name, cancellationToken)
         });
     }
 
