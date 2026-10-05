@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using CitasMedicas.Web.Modules.AgendaMedica.Persistence;
+using CitasMedicas.Web.Modules.Reservas.Persistence;
 
 namespace CitasMedicas.Web.Modules.CatalogoMedico.Persistence;
 
@@ -8,6 +9,7 @@ public sealed class CatalogoMedicoDbContext(DbContextOptions<CatalogoMedicoDbCon
     public DbSet<Specialty> Specialties => Set<Specialty>();
     public DbSet<Doctor> Doctors => Set<Doctor>();
     public DbSet<AppointmentSlot> AppointmentSlots => Set<AppointmentSlot>();
+    public DbSet<AppointmentReservation> AppointmentReservations => Set<AppointmentReservation>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -43,6 +45,19 @@ public sealed class CatalogoMedicoDbContext(DbContextOptions<CatalogoMedicoDbCon
             entity.HasIndex(slot => new { slot.DoctorId, slot.StartsAt }).IsUnique();
             entity.HasOne(slot => slot.Doctor).WithMany(doctor => doctor.Slots)
                 .HasForeignKey(slot => slot.DoctorId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<AppointmentReservation>(entity =>
+        {
+            entity.ToTable("AppointmentReservations", "Reservas");
+            entity.HasKey(reservation => reservation.Id);
+            entity.Property(reservation => reservation.PatientName).HasMaxLength(150).IsRequired();
+            entity.Property(reservation => reservation.PatientEmail).HasMaxLength(254).IsRequired();
+            entity.Property(reservation => reservation.BookedAt).IsRequired();
+            entity.HasIndex(reservation => reservation.AppointmentSlotId).IsUnique();
+            entity.HasOne(reservation => reservation.AppointmentSlot).WithOne()
+                .HasForeignKey<AppointmentReservation>(reservation => reservation.AppointmentSlotId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

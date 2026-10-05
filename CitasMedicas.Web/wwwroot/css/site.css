@@ -64,6 +64,13 @@ body {
 .time-slot { min-width: 86px; padding: .6rem .9rem; border: 1px solid #a8d4cb; border-radius: 9px; background: #f5fbf9; color: #176b61; font-weight: 700; }
 .time-slot:hover, .time-slot-selected { border-color: #176b61; background: #176b61; color: #fff; }
 .time-slot:focus-visible { outline: 3px solid #258cfb; outline-offset: 2px; }
+.reservation-form { max-width: 680px; margin: 0 auto; }
+.reservation-form .form-field { display: grid; gap: .45rem; }
+.reservation-form label { color: #234541; font-weight: 650; }
+.reservation-form .form-control { border-color: #d6e3e0; border-radius: 8px; padding: .75rem .85rem; }
+.reservation-form .text-danger { color: #a83232 !important; font-size: .9rem; }
+.reservation-form .select-specialty { max-width: 260px; padding: .75rem 1.1rem; border: 0; border-radius: 9px; background: #176b61; color: white; }
+.reservation-form .select-specialty:hover { background: #10574f; color: white; }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
   color: var(--bs-secondary-color);

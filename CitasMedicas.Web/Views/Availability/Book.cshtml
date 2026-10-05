@@ -1,0 +1,34 @@
+@model CitasMedicas.Web.Modules.Reservas.Features.BookAppointment.BookAppointmentViewModel
+@{
+    ViewData["Title"] = "Confirmar cita";
+}
+
+<section class="specialties-page availability-page">
+    <a class="back-link" asp-action="Index" asp-route-doctorId="@Model.DoctorId">← Volver a los horarios</a>
+    <div class="specialties-heading">
+        <p class="eyebrow">@Model.Doctor.SpecialtyName</p>
+        <h1>Confirma tu cita</h1>
+        <p class="specialties-intro">@Model.Doctor.Name · @Model.StartsAt.ToString("dddd d 'de' MMMM, HH:mm")</p>
+    </div>
+
+    <form asp-action="Book" method="post" class="specialty-form reservation-form">
+        <input asp-for="DoctorId" type="hidden" />
+        <input asp-for="SlotId" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        <div class="form-field">
+            <label asp-for="PatientName"></label>
+            <input asp-for="PatientName" autocomplete="name" class="form-control" />
+            <span asp-validation-for="PatientName" class="text-danger"></span>
+        </div>
+        <div class="form-field">
+            <label asp-for="PatientEmail"></label>
+            <input asp-for="PatientEmail" autocomplete="email" class="form-control" />
+            <span asp-validation-for="PatientEmail" class="text-danger"></span>
+        </div>
+        <button type="submit" class="select-specialty">Confirmar reserva <span aria-hidden="true">→</span></button>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

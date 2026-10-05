@@ -1,6 +1,7 @@
 using CitasMedicas.Web.Modules.CatalogoMedico.Persistence;
 using Microsoft.EntityFrameworkCore;
 using CitasMedicas.Web.Modules.AgendaMedica.Persistence;
+using CitasMedicas.Web.Modules.Reservas.Features.BookAppointment;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,8 @@ builder.Services.AddDbContext<CatalogoMedicoDbContext>(options =>
 builder.Services.AddScoped<CitasMedicas.Web.Modules.CatalogoMedico.Features.ListSpecialties.ListSpecialtiesQuery>();
 builder.Services.AddScoped<CitasMedicas.Web.Modules.CatalogoMedico.Features.CreateSpecialty.CreateSpecialtyCommand>();
 builder.Services.AddScoped<CitasMedicas.Web.Modules.AgendaMedica.Features.GetDoctorAvailability.GetDoctorAvailabilityQuery>();
+builder.Services.AddScoped<BookAppointmentCommand>();
+builder.Services.AddScoped<GetAppointmentConfirmationQuery>();
 
 var app = builder.Build();
 
@@ -39,6 +42,20 @@ await using (var scope = app.Services.CreateAsyncScope())
                 CONSTRAINT [FK_AppointmentSlots_Doctors_DoctorId] FOREIGN KEY ([DoctorId]) REFERENCES [AgendaMedica].[Doctors] ([Id]) ON DELETE CASCADE
             );
             CREATE UNIQUE INDEX [IX_AppointmentSlots_DoctorId_StartsAt] ON [AgendaMedica].[AppointmentSlots] ([DoctorId], [StartsAt]);
+        END;
+        IF SCHEMA_ID(N'Reservas') IS NULL EXEC(N'CREATE SCHEMA [Reservas]');
+        IF OBJECT_ID(N'[Reservas].[AppointmentReservations]', N'U') IS NULL
+        BEGIN
+            CREATE TABLE [Reservas].[AppointmentReservations] (
+                [Id] int IDENTITY(1,1) NOT NULL CONSTRAINT [PK_AppointmentReservations] PRIMARY KEY,
+                [AppointmentSlotId] int NOT NULL,
+                [PatientName] nvarchar(150) NOT NULL,
+                [PatientEmail] nvarchar(254) NOT NULL,
+                [BookedAt] datetime2 NOT NULL,
+                CONSTRAINT [FK_AppointmentReservations_AppointmentSlots_AppointmentSlotId]
+                    FOREIGN KEY ([AppointmentSlotId]) REFERENCES [AgendaMedica].[AppointmentSlots] ([Id]),
+                CONSTRAINT [UQ_AppointmentReservations_AppointmentSlotId] UNIQUE ([AppointmentSlotId])
+            );
         END;
         """);
     if (!await dbContext.Doctors.AnyAsync())
