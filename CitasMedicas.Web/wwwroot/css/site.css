@@ -54,6 +54,16 @@ body {
 .field-error, .validation-summary { color: #a83232; font-size: .9rem; }
 .form-actions { display: flex; justify-content: flex-end; align-items: center; gap: 1.25rem; margin-top: .25rem; }
 .submit-specialty { padding: .75rem 1.1rem; border: 0; border-radius: 9px; background: #176b61; color: white; font-weight: 700; }
+.doctor-card { min-height: 210px; }
+.doctor-card .select-specialty { text-decoration: none; }
+.availability-dates { display: grid; gap: 1rem; }
+.availability-date { padding: 1.3rem; border: 1px solid #e1ebe8; border-radius: 14px; background: #fff; box-shadow: 0 8px 22px #153c3510; }
+.availability-date h2 { margin: 0 0 1rem; color: #183b39; font-size: 1.15rem; font-weight: 700; text-transform: capitalize; }
+.time-slots { display: flex; flex-wrap: wrap; gap: .65rem; }
+.time-slots form { margin: 0; }
+.time-slot { min-width: 86px; padding: .6rem .9rem; border: 1px solid #a8d4cb; border-radius: 9px; background: #f5fbf9; color: #176b61; font-weight: 700; }
+.time-slot:hover, .time-slot-selected { border-color: #176b61; background: #176b61; color: #fff; }
+.time-slot:focus-visible { outline: 3px solid #258cfb; outline-offset: 2px; }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
   color: var(--bs-secondary-color);

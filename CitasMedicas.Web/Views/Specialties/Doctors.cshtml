@@ -1,0 +1,32 @@
+@model CitasMedicas.Web.Modules.AgendaMedica.Features.GetDoctorAvailability.DoctorListViewModel
+@{
+    ViewData["Title"] = "Profesionales disponibles";
+}
+
+<section class="specialties-page">
+    <a class="back-link" asp-controller="Specialties" asp-action="Index">← Especialidades</a>
+    <div class="specialties-heading">
+        <p class="eyebrow">@Model.Specialty.Name</p>
+        <h1>Elige a tu profesional</h1>
+        <p class="specialties-intro">Consulta los horarios disponibles y elige el que mejor se ajuste a ti.</p>
+    </div>
+
+    @if (Model.Doctors.Count == 0)
+    {
+        <div class="empty-state" role="status"><h2>No hay profesionales disponibles</h2><p>Vuelve a consultar más adelante.</p></div>
+    }
+    else
+    {
+        <div class="specialty-grid">
+            @foreach (var doctor in Model.Doctors)
+            {
+                <article class="specialty-card doctor-card">
+                    <div class="specialty-icon" aria-hidden="true">✚</div>
+                    <h2>@doctor.Name</h2>
+                    <p>@doctor.SpecialtyName</p>
+                    <a class="select-specialty" asp-controller="Availability" asp-action="Index" asp-route-doctorId="@doctor.Id">Consultar horarios <span aria-hidden="true">→</span></a>
+                </article>
+            }
+        </div>
+    }
+</section>

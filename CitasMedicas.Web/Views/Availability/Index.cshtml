@@ -1,0 +1,49 @@
+@model CitasMedicas.Web.Modules.AgendaMedica.Features.GetDoctorAvailability.DoctorAvailabilityViewModel
+@{
+    ViewData["Title"] = "Horarios disponibles";
+}
+
+<section class="specialties-page availability-page">
+    <a class="back-link" asp-controller="Specialties" asp-action="Index">← Especialidades</a>
+    <div class="specialties-heading">
+        <p class="eyebrow">@Model.Doctor.SpecialtyName</p>
+        <h1>Horarios de @Model.Doctor.Name</h1>
+        <p class="specialties-intro">Selecciona una fecha y una hora disponible para tu cita.</p>
+    </div>
+
+    @if (Model.Message is not null)
+    {
+        <div class="selection-confirmation" role="status">
+            <span class="confirmation-icon" aria-hidden="true">✓</span>
+            <span>@Model.Message @if (Model.SelectedAt is not null) { <strong>@Model.SelectedAt.Value.ToString("dddd d 'de' MMMM, HH:mm")</strong> }</span>
+        </div>
+    }
+
+    @if (Model.Dates.Count == 0)
+    {
+        <div class="empty-state" role="status"><h2>No hay horarios disponibles</h2><p>Este profesional no tiene fechas disponibles por el momento.</p></div>
+    }
+    else
+    {
+        <div class="availability-dates">
+            @foreach (var date in Model.Dates)
+            {
+                <section class="availability-date" aria-label="Horarios del @date.Date.ToString("d 'de' MMMM")">
+                    <h2>@date.Date.ToString("dddd d 'de' MMMM")</h2>
+                    <div class="time-slots">
+                        @foreach (var slot in date.Slots)
+                        {
+                            <form asp-action="Select" method="post">
+                                <input type="hidden" name="doctorId" value="@Model.Doctor.Id" />
+                                <input type="hidden" name="slotId" value="@slot.Id" />
+                                <button class="time-slot @(Model.SelectedAt == slot.StartsAt ? "time-slot-selected" : "")" type="submit" aria-label="Seleccionar @slot.StartsAt.ToString("HH:mm") del @date.Date.ToString("d MMMM")">
+                                    @slot.StartsAt.ToString("HH:mm")
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </section>
+            }
+        </div>
+    }
+</section>
