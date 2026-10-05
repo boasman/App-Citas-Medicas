@@ -1,0 +1,35 @@
+@model CitasMedicas.Web.Modules.CatalogoMedico.Features.CreateSpecialty.CreateSpecialtyViewModel
+@{
+    ViewData["Title"] = "Crear especialidad";
+}
+
+<section class="specialties-page create-specialty-page">
+    <a class="back-link" asp-action="Index">← Volver a especialidades</a>
+    <div class="specialties-heading">
+        <p class="eyebrow">Catálogo médico</p>
+        <h1>Crear especialidad</h1>
+        <p class="specialties-intro">Completa los datos para agregar una opción al catálogo disponible para pacientes.</p>
+    </div>
+
+    <form asp-action="Create" method="post" class="specialty-form">
+        <div asp-validation-summary="ModelOnly" class="validation-summary" role="alert"></div>
+        <div class="form-field">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" maxlength="100" autocomplete="off" />
+            <span asp-validation-for="Name" class="field-error"></span>
+        </div>
+        <div class="form-field">
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description" class="form-control" rows="4" maxlength="300"></textarea>
+            <span asp-validation-for="Description" class="field-error"></span>
+        </div>
+        <div class="form-actions">
+            <a class="cancel-link" asp-action="Index">Cancelar</a>
+            <button class="submit-specialty" type="submit">Guardar especialidad</button>
+        </div>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -19,7 +19,41 @@ html {
 
 body {
   margin-bottom: 60px;
+  background: #f5f8f7;
+  color: #183b39;
 }
+
+.navbar-brand { color: #176b61; font-weight: 700; letter-spacing: -.02em; }
+.specialties-page { max-width: 1120px; margin: 3.5rem auto; padding: 0 1rem; }
+.specialties-heading { max-width: 680px; margin-bottom: 2.25rem; }
+.eyebrow { color: #168477; font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.specialties-heading h1 { color: #163c38; font-size: clamp(2rem, 4vw, 3rem); font-weight: 750; letter-spacing: -.045em; line-height: 1.1; }
+.specialties-intro { color: #607875; font-size: 1.05rem; margin-top: 1rem; }
+.specialty-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)); gap: 1rem; }
+.specialty-card { display: flex; flex-direction: column; min-height: 245px; padding: 1.4rem; border: 1px solid #e1ebe8; border-radius: 14px; background: #fff; box-shadow: 0 8px 22px #153c3510; }
+.specialty-icon { display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 1rem; border-radius: 12px; background: #e6f5f1; color: #168477; font-size: 1.35rem; }
+.specialty-card h2 { color: #183b39; font-size: 1.2rem; font-weight: 700; }
+.specialty-card p { flex: 1; color: #607875; font-size: .94rem; line-height: 1.55; }
+.select-specialty { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: .7rem 0 0; border: 0; border-top: 1px solid #e7efed; background: transparent; color: #16796e; font-weight: 700; text-align: left; }
+.select-specialty:hover { color: #0b5149; }
+.selection-confirmation, .empty-state { display: flex; gap: .75rem; align-items: center; margin: 0 0 1.5rem; padding: 1rem 1.2rem; border: 1px solid #b9e4d7; border-radius: 12px; background: #eaf8f2; color: #185b4c; }
+.confirmation-icon { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #c9eddd; font-weight: 700; }
+.empty-state { display: block; padding: 2rem; border-color: #dce9e6; background: white; }
+.empty-state h2 { font-size: 1.2rem; font-weight: 700; }
+.empty-state p { margin: 0; color: #607875; }
+.create-specialty-link { display: inline-flex; align-items: center; margin-top: .6rem; padding: .7rem 1rem; border-radius: 9px; background: #176b61; color: white; font-weight: 700; text-decoration: none; }
+.create-specialty-link:hover, .submit-specialty:hover { background: #10574f; color: white; }
+.back-link, .cancel-link { color: #16796e; font-weight: 650; text-decoration: none; }
+.back-link { display: inline-block; margin-bottom: 1.5rem; }
+.create-specialty-page { max-width: 760px; }
+.specialty-form { display: grid; gap: 1.25rem; padding: clamp(1.25rem, 4vw, 2rem); border: 1px solid #e1ebe8; border-radius: 14px; background: white; box-shadow: 0 8px 22px #153c3510; }
+.form-field { display: grid; gap: .45rem; }
+.form-field label { color: #234541; font-weight: 650; }
+.form-field .form-control { border-color: #d6e3e0; border-radius: 8px; padding: .75rem .85rem; }
+.form-field .form-control:focus { border-color: #57a89c; box-shadow: 0 0 0 .2rem #16847724; }
+.field-error, .validation-summary { color: #a83232; font-size: .9rem; }
+.form-actions { display: flex; justify-content: flex-end; align-items: center; gap: 1.25rem; margin-top: .25rem; }
+.submit-specialty { padding: .75rem 1.1rem; border: 0; border-radius: 9px; background: #176b61; color: white; font-weight: 700; }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
   color: var(--bs-secondary-color);
