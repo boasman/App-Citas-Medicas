@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using CitasMedicas.Web.Modules.AgendaMedica.Persistence;
 using CitasMedicas.Web.Modules.Reservas.Features.BookAppointment;
 using CitasMedicas.Web.Modules.Reservas.Features.GetPatientAppointments;
+using CitasMedicas.Web.Modules.CatalogoMedico.Features.RegisterDoctor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,7 @@ builder.Services.AddDbContext<CatalogoMedicoDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("CitasMedicas")));
 builder.Services.AddScoped<CitasMedicas.Web.Modules.CatalogoMedico.Features.ListSpecialties.ListSpecialtiesQuery>();
 builder.Services.AddScoped<CitasMedicas.Web.Modules.CatalogoMedico.Features.CreateSpecialty.CreateSpecialtyCommand>();
+builder.Services.AddScoped<RegisterDoctorCommand>();
 builder.Services.AddScoped<CitasMedicas.Web.Modules.AgendaMedica.Features.GetDoctorAvailability.GetDoctorAvailabilityQuery>();
 builder.Services.AddScoped<BookAppointmentCommand>();
 builder.Services.AddScoped<GetAppointmentConfirmationQuery>();

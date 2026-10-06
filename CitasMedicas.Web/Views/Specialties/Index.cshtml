@@ -9,11 +9,17 @@
         <h1>Encuentra la atención que necesitas</h1>
         <p class="specialties-intro">Explora nuestras especialidades y elige la que mejor se ajuste a tu consulta.</p>
         <a class="create-specialty-link" asp-action="Create">+ Crear especialidad</a>
+        <a class="create-specialty-link" asp-controller="Doctors" asp-action="Create">+ Registrar médico</a>
     </div>
 
     @if (TempData["SuccessMessage"] is string successMessage)
     {
         <div class="selection-confirmation" role="status">@successMessage</div>
+    }
+
+    @if (TempData["DoctorSuccessMessage"] is string doctorSuccessMessage)
+    {
+        <div class="selection-confirmation" role="status">@doctorSuccessMessage</div>
     }
 
     @if (Model.SelectedSpecialty is not null)
