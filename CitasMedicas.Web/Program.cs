@@ -5,6 +5,7 @@ using CitasMedicas.Web.Modules.Reservas.Features.BookAppointment;
 using CitasMedicas.Web.Modules.Reservas.Features.GetPatientAppointments;
 using CitasMedicas.Web.Modules.CatalogoMedico.Features.RegisterDoctor;
 using CitasMedicas.Web.Modules.CatalogoMedico.Features.AssignDoctorSpecialty;
+using CitasMedicas.Web.Modules.AgendaMedica.Features.RegisterAvailability;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,8 @@ builder.Services.AddScoped<RegisterDoctorCommand>();
 builder.Services.AddScoped<AssignDoctorSpecialtyCommand>();
 builder.Services.AddScoped<GetDoctorSpecialtyAssignmentOptionsQuery>();
 builder.Services.AddScoped<CitasMedicas.Web.Modules.AgendaMedica.Features.GetDoctorAvailability.GetDoctorAvailabilityQuery>();
+builder.Services.AddScoped<GetAvailabilityRegistrationOptionsQuery>();
+builder.Services.AddScoped<RegisterAvailabilityCommand>();
 builder.Services.AddScoped<BookAppointmentCommand>();
 builder.Services.AddScoped<GetAppointmentConfirmationQuery>();
 builder.Services.AddScoped<GetPatientAppointmentsQuery>();
