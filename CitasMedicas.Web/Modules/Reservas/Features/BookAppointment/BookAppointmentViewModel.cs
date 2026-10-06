@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using CitasMedicas.Web.Modules.AgendaMedica.Features.GetDoctorAvailability;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace CitasMedicas.Web.Modules.Reservas.Features.BookAppointment;
 
@@ -7,6 +8,7 @@ public sealed class BookAppointmentViewModel
 {
     public int DoctorId { get; init; }
     public int SlotId { get; init; }
+    [ValidateNever]
     public DoctorViewModel Doctor { get; init; } = null!;
     public DateTime StartsAt { get; init; }
 
