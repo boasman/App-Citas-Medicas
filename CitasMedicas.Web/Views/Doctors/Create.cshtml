@@ -1,0 +1,41 @@
+@model CitasMedicas.Web.Modules.CatalogoMedico.Features.RegisterDoctor.RegisterDoctorViewModel
+@{
+    ViewData["Title"] = "Registrar médico";
+}
+
+<section class="specialties-page create-specialty-page">
+    <a class="back-link" asp-controller="Specialties" asp-action="Index">← Volver a especialidades</a>
+    <div class="specialties-heading">
+        <p class="eyebrow">Catálogo médico</p>
+        <h1>Registrar médico</h1>
+        <p class="specialties-intro">Completa los datos para que el profesional aparezca entre los médicos disponibles.</p>
+    </div>
+
+    <form asp-action="Create" method="post" class="specialty-form">
+        <div asp-validation-summary="ModelOnly" class="validation-summary" role="alert"></div>
+        <div class="form-field">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" maxlength="150" autocomplete="name" />
+            <span asp-validation-for="Name" class="field-error"></span>
+        </div>
+        <div class="form-field">
+            <label asp-for="SpecialtyId"></label>
+            <select asp-for="SpecialtyId" class="form-control">
+                <option value="0">Selecciona una especialidad</option>
+                @foreach (var specialty in Model.Specialties)
+                {
+                    <option value="@specialty.Id">@specialty.Name</option>
+                }
+            </select>
+            <span asp-validation-for="SpecialtyId" class="field-error"></span>
+        </div>
+        <div class="form-actions">
+            <a class="cancel-link" asp-controller="Specialties" asp-action="Index">Cancelar</a>
+            <button class="submit-specialty" type="submit">Registrar médico</button>
+        </div>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
