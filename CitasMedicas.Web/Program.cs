@@ -2,6 +2,7 @@ using CitasMedicas.Web.Modules.CatalogoMedico.Persistence;
 using Microsoft.EntityFrameworkCore;
 using CitasMedicas.Web.Modules.AgendaMedica.Persistence;
 using CitasMedicas.Web.Modules.Reservas.Features.BookAppointment;
+using CitasMedicas.Web.Modules.Reservas.Features.GetPatientAppointments;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddScoped<CitasMedicas.Web.Modules.CatalogoMedico.Features.Crea
 builder.Services.AddScoped<CitasMedicas.Web.Modules.AgendaMedica.Features.GetDoctorAvailability.GetDoctorAvailabilityQuery>();
 builder.Services.AddScoped<BookAppointmentCommand>();
 builder.Services.AddScoped<GetAppointmentConfirmationQuery>();
+builder.Services.AddScoped<GetPatientAppointmentsQuery>();
 
 var app = builder.Build();
 

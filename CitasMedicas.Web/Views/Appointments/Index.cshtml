@@ -1,0 +1,48 @@
+@model CitasMedicas.Web.Modules.Reservas.Features.GetPatientAppointments.PatientAppointmentsViewModel
+@{
+    ViewData["Title"] = "Mis citas";
+}
+
+<section class="specialties-page availability-page">
+    <div class="specialties-heading">
+        <p class="eyebrow">Reservas</p>
+        <h1>Mis citas</h1>
+        <p class="specialties-intro">Consulta tus próximas citas con el email que usaste al reservar.</p>
+    </div>
+
+    <form asp-action="Index" method="post" class="booking-form">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" autocomplete="email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Buscar mis citas</button>
+    </form>
+
+    @if (Model.HasSearched && Model.Appointments.Count == 0 && ViewData.ModelState.IsValid)
+    {
+        <div class="empty-state mt-4" role="status">
+            <h2>No tienes citas futuras</h2>
+            <p>No encontramos citas próximas asociadas a ese email.</p>
+        </div>
+    }
+    else if (Model.Appointments.Count > 0)
+    {
+        <div class="appointment-list mt-4">
+            @foreach (var appointment in Model.Appointments)
+            {
+                <article class="empty-state mb-3">
+                    <p class="eyebrow">@appointment.SpecialtyName</p>
+                    <h2>@appointment.DoctorName</h2>
+                    <p>@appointment.StartsAt.ToString("dddd d 'de' MMMM 'de' yyyy")</p>
+                    <p>@appointment.StartsAt.ToString("HH:mm")</p>
+                </article>
+            }
+        </div>
+    }
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
