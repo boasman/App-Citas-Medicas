@@ -10,6 +10,7 @@
         <p class="specialties-intro">Explora nuestras especialidades y elige la que mejor se ajuste a tu consulta.</p>
         <a class="create-specialty-link" asp-action="Create">+ Crear especialidad</a>
         <a class="create-specialty-link" asp-controller="Doctors" asp-action="Create">+ Registrar médico</a>
+        <a class="create-specialty-link" asp-controller="Doctors" asp-action="AssignSpecialty">+ Asignar especialidad a médico</a>
     </div>
 
     @if (TempData["SuccessMessage"] is string successMessage)
