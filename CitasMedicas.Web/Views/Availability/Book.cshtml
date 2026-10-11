@@ -23,6 +23,7 @@
         <div class="form-field">
             <label asp-for="PatientEmail"></label>
             <input asp-for="PatientEmail" autocomplete="email" class="form-control" />
+            <small class="form-text text-muted">Usaremos este email para que puedas consultar tus citas futuras en «Mis citas».</small>
             <span asp-validation-for="PatientEmail" class="text-danger"></span>
         </div>
         <button type="submit" class="select-specialty">Confirmar reserva <span aria-hidden="true">→</span></button>
