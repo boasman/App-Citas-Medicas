@@ -1,0 +1,5 @@
+4-11 - Creando la estructura
+
+Prompt 1:
+
+Dame una instrucción para pasársela a Codex para que genere la estructura sugerida para el monolito modular y las vertical slices (ya el proyecto está creado). Indicar que solo debe crear las carpetas, no clases ni tipos aún. Las carpetas, aunque estén vacías, deben colocarse en el repositorio de git.

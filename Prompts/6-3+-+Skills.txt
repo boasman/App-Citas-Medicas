@@ -1,0 +1,125 @@
+Clase: 6-3 - Skills
+
+Skill 1:
+
+---
+name: mi-comando
+description: Skill de prueba
+---
+
+Cuando el usuario invoque este skill, imprime "hola mundo" y no hagas más nada.
+
+-----------------------------------------------------------------------
+
+Skill 2:
+
+---
+name: hacer-pr
+description: Realiza commit y push de cambios en una rama de Git, y luego crea un pull request en GitHub.
+---
+
+Realiza commit y push de cambios en una rama de Git, y luego crea un pull request en GitHub.
+
+El mensaje del commit debe ser breve y en tiempo imperativo, por ejemplo: `Agrega vista de reserva de cita`.
+
+El mensaje del commit debe incluir el número de issue correspondiente, si aplica, por ejemplo: `Agrega vista de reserva de cita (#123)`.
+
+-----------------------------------------------------------------------
+
+Skill 3:
+
+---
+name: to-issues
+description: Divide un plan, especificación o PRD en issues independientes del sistema de seguimiento utilizando vertical slices (tracer bullets).
+disable-model-invocation: true
+---
+
+# A Issues
+
+Divide un plan en **issues** que puedan trabajarse de forma independiente utilizando **vertical slices (tracer bullets)**.
+
+## Proceso
+
+### 1. Reunir contexto
+
+Trabaja con toda la información que ya exista en el contexto de la conversación. Si el usuario proporciona una referencia a un issue (número, URL o ruta), recupéralo del sistema de seguimiento de issues y lee tanto su contenido completo como sus comentarios.
+
+### 2. Explorar el código (opcional)
+
+Si aún no has explorado el código del proyecto, hazlo para comprender su estado actual. Los títulos y descripciones de los issues deben utilizar el vocabulario del dominio del proyecto y respetar las ADR (Architecture Decision Records) relacionadas con el área que se va a modificar.
+
+Busca oportunidades para realizar refactorizaciones previas que faciliten la implementación.
+
+> "Primero haz que el cambio sea fácil; luego haz el cambio fácil."
+
+### 3. Diseñar los vertical slices
+
+Divide el plan en **issues tipo tracer bullet**. Cada issue debe representar un **vertical slice** del sistema, atravesando todas las capas de integración de extremo a extremo, y **no** una división horizontal por capas.
+
+<vertical-slice-rules>
+
+- Cada slice debe entregar un recorrido pequeño pero **COMPLETO** a través de todas las capas (base de datos, API, interfaz de usuario y pruebas).
+- Un slice terminado debe poder demostrarse o verificarse de manera independiente.
+- Cualquier refactorización previa necesaria debe realizarse antes de implementar el slice correspondiente.
+
+</vertical-slice-rules>
+
+### 4. Validar la propuesta con el usuario
+
+Presenta la propuesta como una lista numerada. Para cada slice muestra:
+
+- **Título:** nombre corto y descriptivo.
+- **Bloqueado por:** qué otros slices (si existen) deben completarse antes.
+- **Historias de usuario cubiertas:** qué historias de usuario resuelve este slice (si el material original las incluye).
+
+Luego pregunta al usuario:
+
+- ¿El nivel de granularidad es el adecuado? (¿demasiado grande o demasiado pequeño?)
+- ¿Las dependencias entre los slices son correctas?
+- ¿Conviene unir algunos slices o dividirlos aún más?
+
+Itera hasta que el usuario apruebe la división propuesta.
+
+### 5. Publicar los issues en el sistema de seguimiento
+
+Una vez aprobados los slices, publica un nuevo issue para cada uno utilizando la plantilla mostrada más abajo. 
+
+Publica los issues respetando el orden de dependencias (primero los bloqueadores), para poder referenciar identificadores reales en el campo **"Bloqueado por"**.
+
+<issue-template>
+
+## Padre
+
+Referencia al issue padre en el sistema de seguimiento (solo si el origen fue un issue existente; de lo contrario, omite esta sección).
+
+## Qué construir
+
+Descripción concisa de este vertical slice. Explica el comportamiento completo de extremo a extremo, evitando describir la implementación capa por capa.
+
+Evita incluir rutas de archivos o fragmentos de código específicos, ya que se vuelven obsoletos rápidamente.
+
+**Excepción:** si durante un prototipo se produjo un fragmento de código que expresa una decisión de diseño con mayor precisión que una descripción en texto (por ejemplo, una máquina de estados, un reducer, un esquema o la forma de un tipo), inclúyelo aquí e indica brevemente que proviene del prototipo.
+
+Limítate únicamente a las partes que contienen decisiones importantes; no incluyas una implementación funcional completa.
+
+## Versión mínima viable
+
+Descripción de la funcionalidad mínima que debe estar presente para considerar el slice completo.
+
+## Criterios de aceptación
+
+- [ ] Criterio 1
+- [ ] Criterio 2
+- [ ] Criterio 3
+
+## Bloqueado por
+
+- Referencia al issue bloqueador (si existe).
+
+O bien:
+
+**Ninguno: puede comenzar inmediatamente.**
+
+</issue-template>
+
+No cierres ni modifiques el issue padre bajo ninguna circunstancia.

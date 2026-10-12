@@ -1,0 +1,5 @@
+4-5 - Monolito Modular
+
+Prompt 1:
+
+Considerando que hemos decidido construir un monolito ASP.NET Core MVC con EF Core y SQL Server, agrupa las user stories en módulos funcionales del sistema (estamos usando modular monolith). Los módulos deben representar capacidades de negocio y no capas técnicas.

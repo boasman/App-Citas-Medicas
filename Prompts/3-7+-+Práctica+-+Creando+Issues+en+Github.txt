@@ -1,0 +1,5 @@
+Clase 3-7: Práctica - Creando Issues en Github
+
+Prompt 1:
+
+Crea un issue en github por cada historia. El nombre del repositorio es: "usuario/nombre-del-repositorio"

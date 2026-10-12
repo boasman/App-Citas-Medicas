@@ -1,0 +1,47 @@
+Clase 3-5: Práctica - Características y User Stories
+
+Prompt 1:
+
+Estamos construyendo un MVP para una app de reserva de citas médicas.
+Tu tarea:
+Convierte este MVP en una lista de features del sistema.
+Reglas:
+- No agregues funcionalidades fuera del MVP.
+- No incluyas pagos, autenticación, historial clínico, notificaciones avanzadas ni videollamadas.
+- Para cada feature, explica qué capacidad del sistema representa.
+- Indica qué usuario principal se beneficia: paciente, clínica o ambos.
+
+Prompt 2:
+
+A partir de las features anteriores:
+Genera user stories para cada feature.
+Formato:
+Como [tipo de usuario], quiero [acción o necesidad], para [beneficio o resultado].
+Reglas:
+- Mantén las historias pequeñas.
+- No agregues funcionalidades fuera del MVP.
+- Evita historias técnicas como "como sistema".
+- Cada historia debe poder convertirse luego en una tarea de desarrollo.
+- Incluye máximo 3 historias por feature.
+
+Prompt 3:
+
+Actúa como product manager crítico.
+Revisa las anteriores user stories para un MVP de reserva de citas médicas.
+Hipótesis del MVP:
+" Los pacientes tienen dificultad para encontrar y reservar un horario disponible que realmente les funcione"
+Tu tarea:
+1. Identifica historias demasiado grandes, ambiguas o duplicadas.
+2. Propón una versión más simple cuando sea necesario.
+3. Explica qué historias son esenciales para validar la hipótesis.
+
+Prompt 4:
+
+Dame un listado a modo de resumen de las user stories simplificadas
+
+Prompt 5:
+
+Para cada historia, sugiere la versión mínima aceptable y criterios de aceptación en el siguiente formato:
+Historia: La user story
+Versión mínima aceptable: la versión mínima aceptable
+Listado de criterios de aceptación

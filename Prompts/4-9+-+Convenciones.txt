@@ -1,0 +1,13 @@
+4-9 - Práctica - Convenciones
+
+Prompt 1:
+
+Propón convenciones mínimas para este proyecto
+
+Prompt 2:
+
+Revisa estas convenciones como si fueras un tech lead pragmático. Elimina reglas innecesarias, ambiguas o demasiado rígidas para un MVP.
+
+Prompt 3:
+
+Convierte estas convenciones en un archivo CONVENTIONS.md para que Codex lo use al generar nuevas funcionalidades. Produce el contenido directamente en formato markdown.
