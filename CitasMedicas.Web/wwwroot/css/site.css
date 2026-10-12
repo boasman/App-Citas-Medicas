@@ -38,6 +38,8 @@ body {
 .select-specialty:hover { color: #0b5149; }
 .selection-confirmation, .empty-state { display: flex; gap: .75rem; align-items: center; margin: 0 0 1.5rem; padding: 1rem 1.2rem; border: 1px solid #b9e4d7; border-radius: 12px; background: #eaf8f2; color: #185b4c; }
 .confirmation-icon { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #c9eddd; font-weight: 700; }
+.availability-warning { display: flex; gap: .75rem; align-items: center; margin: 0 0 1.5rem; padding: 1rem 1.2rem; border: 1px solid #f0c98a; border-radius: 12px; background: #fff6e8; color: #75450b; }
+.warning-icon { display: grid; flex: 0 0 28px; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #f8dfb5; color: #75450b; font-weight: 800; }
 .empty-state { display: block; padding: 2rem; border-color: #dce9e6; background: white; }
 .empty-state h2 { font-size: 1.2rem; font-weight: 700; }
 .empty-state p { margin: 0; color: #607875; }
@@ -58,7 +60,7 @@ body {
 .doctor-card .select-specialty { text-decoration: none; }
 .availability-dates { display: grid; gap: 1rem; }
 .availability-date { padding: 1.3rem; border: 1px solid #e1ebe8; border-radius: 14px; background: #fff; box-shadow: 0 8px 22px #153c3510; }
-.availability-date h2 { margin: 0 0 1rem; color: #183b39; font-size: 1.15rem; font-weight: 700; text-transform: capitalize; }
+.availability-date h2 { margin: 0 0 1rem; color: #183b39; font-size: 1.15rem; font-weight: 700; }
 .time-slots { display: flex; flex-wrap: wrap; gap: .65rem; }
 .time-slots form { margin: 0; }
 .time-slot { min-width: 86px; padding: .6rem .9rem; border: 1px solid #a8d4cb; border-radius: 9px; background: #f5fbf9; color: #176b61; font-weight: 700; }

@@ -33,7 +33,7 @@ public class AvailabilityController(
             {
                 Doctor = model.Doctor,
                 Dates = model.Dates,
-                Message = "Ese horario ya no está disponible. Elige otra opción."
+                Message = "No se reservó la cita. Ese horario ya no está disponible; elige otro horario."
             };
             return View("Index", model);
         }
@@ -53,7 +53,7 @@ public class AvailabilityController(
         var slot = await availability.FindAvailableSlotAsync(doctorId, slotId, cancellationToken);
         if (slot is null)
         {
-            TempData["AvailabilityMessage"] = "Ese horario ya no está disponible. Elige otra opción.";
+            TempData["AvailabilityMessage"] = "No se reservó la cita. Ese horario ya no está disponible; elige otro horario.";
             return RedirectToAction(nameof(Index), new { doctorId });
         }
 
@@ -79,7 +79,7 @@ public class AvailabilityController(
         var slot = await availability.FindAvailableSlotAsync(model.DoctorId, model.SlotId, cancellationToken);
         if (slot is null)
         {
-            TempData["AvailabilityMessage"] = "Ese horario ya no está disponible. Elige otra opción.";
+            TempData["AvailabilityMessage"] = "No se reservó la cita. Ese horario ya no está disponible; elige otro horario.";
             return RedirectToAction(nameof(Index), new { doctorId = model.DoctorId });
         }
 
@@ -107,7 +107,7 @@ public class AvailabilityController(
 
         if (reservationId is null)
         {
-            TempData["AvailabilityMessage"] = "Ese horario acaba de ser reservado. Elige otra opción.";
+            TempData["AvailabilityMessage"] = "No se reservó la cita. Ese horario acaba de ser reservado; elige otro horario.";
             return RedirectToAction(nameof(Index), new { doctorId = model.DoctorId });
         }
 
