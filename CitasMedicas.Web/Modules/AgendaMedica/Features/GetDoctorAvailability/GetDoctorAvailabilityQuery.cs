@@ -36,6 +36,7 @@ public sealed class GetDoctorAvailabilityQuery(CatalogoMedicoDbContext dbContext
         {
             Doctor = doctor,
             Dates = slots.GroupBy(slot => slot.StartsAt.Date)
+                .OrderBy(group => group.Key)
                 .Select(group => new AvailableDateViewModel(group.Key, group.ToList()))
                 .ToList()
         };
