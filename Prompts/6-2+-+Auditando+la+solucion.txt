@@ -1,0 +1,28 @@
+Clase 6-2: Auditando la solución
+
+Prompt 1:
+
+Actúa como un usuario que intenta reservar una cita médica.
+
+Analiza este flujo:
+
+1. Buscar disponibilidad
+2. Seleccionar horario
+3. Confirmar reserva
+
+Identifica:
+
+- Fricciones para el usuario
+- Información confusa
+- Pasos innecesarios
+- Posibles errores de UX
+- Mejoras sugeridas
+
+No propongas nuevas funcionalidades.
+Concéntrate únicamente en mejorar la experiencia existente.
+
+---------------------------------------------------------------------
+
+Prompt 2:
+
+Convierte las mejoras sugeridas en Github issues. Agrégales una versión mínima aceptable y criterios de aceptación.

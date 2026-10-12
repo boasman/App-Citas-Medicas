@@ -1,0 +1,54 @@
+Clase 3-3: Práctica - Delimitando el MVP
+
+Prompt 1:
+
+Quiero construir un sistema de reservas de citas médicas.
+Actúa como un consultor de producto.
+Genera una lista de problemas reales que enfrentan:
+- Pacientes
+- Médicos
+- Clínicas
+al momento de gestionar citas médicas.
+No propongas soluciones todavía.
+Solo identifica problemas.
+Agrúpalos por tipo de usuario. 
+
+Prompt 2:
+
+Analiza los problemas anteriores.
+Si tuviéramos presupuesto para resolver solamente uno de ellos durante los próximos 30 días, ¿cuál recomendarías resolver primero?
+Explica:
+- Impacto para el usuario
+- Frecuencia del problema
+- Facilidad de validación
+- Potencial de negocio
+
+Prompt 3:
+
+Dado el siguiente problema:
+“Los pacientes tienen dificultad para encontrar y reservar un horario disponible que realmente les funcione.”
+Genera todas las funcionalidades que podrían formar parte de una solución.
+No te limites.
+Incluye ideas básicas y avanzadas.
+
+Prompt 4:
+
+Clasifica las anteriores funcionalidades en tres grupos:
+1. Imprescindibles para validar el producto.
+2. Deseables pero no necesarias.
+3. Funcionalidades futuras.
+El criterio es:
+"¿Podemos demostrar que la idea funciona sin esta funcionalidad?"
+Explica cada decisión.
+
+Prompt 5:
+
+Con toda la información anterior:
+Diseña un MVP extremadamente pequeño.
+El objetivo es validar que los pacientes desean reservar citas médicas por internet.
+Incluye únicamente funcionalidades indispensables.
+Justifica por qué cada funcionalidad forma parte del MVP.
+
+Prompt 6:
+
+Elabora un listado resumido de las características del MVP.

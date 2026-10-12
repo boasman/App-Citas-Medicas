@@ -1,0 +1,5 @@
+Clase 4-3: Práctica - Arquitectura para proyectos personales
+
+Prompt 1:
+
+Analiza las user stories y propón la arquitectura más simple posible para construir un MVP en ASP.NET Core. Evita sobreingeniería. Justifica cada decisión.

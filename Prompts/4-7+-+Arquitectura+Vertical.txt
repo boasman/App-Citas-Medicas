@@ -1,0 +1,8 @@
+4-7 - Práctica - Arquitectura Vertical
+
+Prompt 1:
+
+Diseña los vertical slices para cada historia de usuario. 
+- Un vertical slice debe representar un flujo completo de negocio o caso de uso, no una pantalla, campo o historia individual.
+- Si varias historias forman parte del mismo flujo, deben agruparse en un único slice.
+- Propón el menor número de slices posible sin perder claridad.
