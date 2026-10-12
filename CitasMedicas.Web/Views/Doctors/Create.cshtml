@@ -18,20 +18,36 @@
             <input asp-for="Name" class="form-control" maxlength="150" autocomplete="name" />
             <span asp-validation-for="Name" class="field-error"></span>
         </div>
-        <div class="form-field">
-            <label asp-for="SpecialtyId"></label>
-            <select asp-for="SpecialtyId" class="form-control">
-                <option value="0">Selecciona una especialidad</option>
-                @foreach (var specialty in Model.Specialties)
-                {
-                    <option value="@specialty.Id">@specialty.Name</option>
-                }
-            </select>
-            <span asp-validation-for="SpecialtyId" class="field-error"></span>
-        </div>
+        @if (Model.Specialties.Count == 0)
+        {
+            <div class="empty-state" role="status">
+                <p>Aún no hay especialidades disponibles. Crea una para poder registrar este médico.</p>
+                <a class="submit-specialty" asp-controller="Specialties" asp-action="Create"
+                   asp-route-returnToDoctorCreate="true" asp-route-doctorName="@Model.Name">
+                    Crear especialidad
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="form-field">
+                <label asp-for="SpecialtyId"></label>
+                <select asp-for="SpecialtyId" class="form-control">
+                    <option value="0">Selecciona una especialidad</option>
+                    @foreach (var specialty in Model.Specialties)
+                    {
+                        <option value="@specialty.Id">@specialty.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="SpecialtyId" class="field-error"></span>
+            </div>
+        }
         <div class="form-actions">
             <a class="cancel-link" asp-controller="Specialties" asp-action="Index">Cancelar</a>
-            <button class="submit-specialty" type="submit">Registrar médico</button>
+            @if (Model.Specialties.Count > 0)
+            {
+                <button class="submit-specialty" type="submit">Registrar médico</button>
+            }
         </div>
     </form>
 </section>

@@ -13,4 +13,8 @@ public sealed class CreateSpecialtyViewModel
     [StringLength(300, ErrorMessage = "La descripción no puede superar los 300 caracteres.")]
     [Display(Name = "Descripción")]
     public string Description { get; set; } = string.Empty;
+
+    public bool ReturnToDoctorCreate { get; set; }
+
+    public string DoctorName { get; set; } = string.Empty;
 }

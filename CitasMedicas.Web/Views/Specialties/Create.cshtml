@@ -4,7 +4,14 @@
 }
 
 <section class="specialties-page create-specialty-page">
-    <a class="back-link" asp-action="Index">← Volver a especialidades</a>
+    @if (Model.ReturnToDoctorCreate)
+    {
+        <a class="back-link" asp-controller="Doctors" asp-action="Create" asp-route-name="@Model.DoctorName">← Volver al registro del médico</a>
+    }
+    else
+    {
+        <a class="back-link" asp-action="Index">← Volver a especialidades</a>
+    }
     <div class="specialties-heading">
         <p class="eyebrow">Catálogo médico</p>
         <h1>Crear especialidad</h1>
@@ -12,6 +19,8 @@
     </div>
 
     <form asp-action="Create" method="post" class="specialty-form">
+        <input asp-for="ReturnToDoctorCreate" type="hidden" />
+        <input asp-for="DoctorName" type="hidden" />
         <div asp-validation-summary="ModelOnly" class="validation-summary" role="alert"></div>
         <div class="form-field">
             <label asp-for="Name"></label>
@@ -24,7 +33,14 @@
             <span asp-validation-for="Description" class="field-error"></span>
         </div>
         <div class="form-actions">
-            <a class="cancel-link" asp-action="Index">Cancelar</a>
+            @if (Model.ReturnToDoctorCreate)
+            {
+                <a class="cancel-link" asp-action="CancelCreateForDoctor" asp-route-doctorName="@Model.DoctorName">Cancelar</a>
+            }
+            else
+            {
+                <a class="cancel-link" asp-action="Index">Cancelar</a>
+            }
             <button class="submit-specialty" type="submit">Guardar especialidad</button>
         </div>
     </form>

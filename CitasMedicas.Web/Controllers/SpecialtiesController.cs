@@ -45,9 +45,13 @@ public class SpecialtiesController(
     }
 
     [HttpGet]
-    public IActionResult Create()
+    public IActionResult Create(bool returnToDoctorCreate = false, string? doctorName = null)
     {
-        return View(new CreateSpecialtyViewModel());
+        return View(new CreateSpecialtyViewModel
+        {
+            ReturnToDoctorCreate = returnToDoctorCreate,
+            DoctorName = doctorName ?? string.Empty
+        });
     }
 
     [HttpPost]
@@ -66,8 +70,25 @@ public class SpecialtiesController(
             return View(model);
         }
 
+        if (model.ReturnToDoctorCreate)
+        {
+            var specialty = (await listSpecialties.ExecuteAsync(cancellationToken))
+                .FirstOrDefault(item => string.Equals(item.Name, model.Name.Trim(), StringComparison.OrdinalIgnoreCase));
+            return RedirectToAction("Create", "Doctors", new
+            {
+                name = model.DoctorName,
+                specialtyId = specialty?.Id
+            });
+        }
+
         TempData["SuccessMessage"] = $"La especialidad {model.Name.Trim()} se creó correctamente.";
         return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public IActionResult CancelCreateForDoctor(string? doctorName)
+    {
+        return RedirectToAction("Create", "Doctors", new { name = doctorName });
     }
 
     [HttpPost]
