@@ -11,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
 builder.Services.AddDbContext<CatalogoMedicoDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("CitasMedicas")));
 builder.Services.AddScoped<CitasMedicas.Web.Modules.CatalogoMedico.Features.ListSpecialties.ListSpecialtiesQuery>();
@@ -120,6 +122,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthorization();
 

@@ -4,7 +4,7 @@
 }
 
 <section class="specialties-page availability-page">
-    <a class="back-link" asp-action="Index" asp-route-doctorId="@Model.DoctorId">← Volver a los horarios</a>
+    <partial name="_ReservationSteps" />
     <div class="specialties-heading">
         <p class="eyebrow">@Model.Doctor.SpecialtyName</p>
         <h1>Revisa los datos antes de confirmar</h1>
@@ -26,10 +26,29 @@
             <small class="form-text text-muted">Usaremos este email para que puedas consultar tus citas futuras en «Mis citas».</small>
             <span asp-validation-for="PatientEmail" class="text-danger"></span>
         </div>
-        <button type="submit" class="select-specialty">Confirmar y reservar cita <span aria-hidden="true">→</span></button>
+        <div class="form-actions">
+            <button type="submit" class="reservation-back" formaction="@Url.Action("BackToAvailability")" formnovalidate>← Volver a los horarios</button>
+            <button type="submit" class="select-specialty">Confirmar y reservar cita <span aria-hidden="true">→</span></button>
+        </div>
     </form>
 </section>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        (() => {
+            const nameField = document.getElementById("PatientName");
+            const emailField = document.getElementById("PatientEmail");
+            const storageKey = "appointment-reservation-@Model.DoctorId-@Model.SlotId";
+
+            try {
+                const saved = JSON.parse(sessionStorage.getItem(storageKey) || "{}");
+                if (!nameField.value) nameField.value = saved.name || "";
+                if (!emailField.value) emailField.value = saved.email || "";
+                const saveDetails = () => sessionStorage.setItem(storageKey, JSON.stringify({ name: nameField.value, email: emailField.value }));
+                nameField.addEventListener("input", saveDetails);
+                emailField.addEventListener("input", saveDetails);
+            } catch { }
+        })();
+    </script>
 }

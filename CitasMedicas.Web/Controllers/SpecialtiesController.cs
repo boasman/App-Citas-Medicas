@@ -12,6 +12,7 @@ public class SpecialtiesController(
 {
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
+        ViewData["ReservationStep"] = 1;
         return View(new SpecialtiesViewModel
         {
             Specialties = await listSpecialties.ExecuteAsync(cancellationToken)
@@ -27,11 +28,20 @@ public class SpecialtiesController(
             return NotFound();
         }
 
-        return View(new DoctorListViewModel
+        if (HttpContext.Session.GetInt32("ReservationSpecialtyId") != specialtyId)
+        {
+            HttpContext.Session.SetInt32("ReservationSpecialtyId", specialtyId);
+            HttpContext.Session.Remove("ReservationDoctorId");
+            HttpContext.Session.Remove("ReservationSlotId");
+        }
+
+        var model = new DoctorListViewModel
         {
             Specialty = specialty,
             Doctors = await doctorAvailability.ListDoctorsAsync(specialty.Name, cancellationToken)
-        });
+        };
+        ViewData["ReservationStep"] = 2;
+        return View(model);
     }
 
     [HttpGet]

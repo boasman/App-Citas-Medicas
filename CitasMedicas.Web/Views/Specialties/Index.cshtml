@@ -4,6 +4,7 @@
 }
 
 <section class="specialties-page">
+    <partial name="_ReservationSteps" />
     <div class="specialties-heading">
         <p class="eyebrow">Citas Médicas</p>
         <h1>Encuentra la atención que necesitas</h1>
@@ -20,7 +21,19 @@
 
     @if (TempData["DoctorSuccessMessage"] is string doctorSuccessMessage)
     {
-        <div class="selection-confirmation" role="status">@doctorSuccessMessage</div>
+        <div class="selection-confirmation doctor-registration-confirmation" role="status">
+            <span class="confirmation-icon" aria-hidden="true">✓</span>
+            <div>
+                <strong>@doctorSuccessMessage</strong>
+                <p>El médico queda registrado aunque configures sus horarios más adelante.</p>
+            </div>
+            @if (TempData["CreatedDoctorId"] is int createdDoctorId)
+            {
+                <a class="create-specialty-link" asp-controller="Agenda" asp-action="CreateAvailability" asp-route-doctorId="@createdDoctorId">
+                    Registrar disponibilidad <span aria-hidden="true">→</span>
+                </a>
+            }
+        </div>
     }
 
     @if (Model.SelectedSpecialty is not null)

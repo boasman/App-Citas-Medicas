@@ -1,0 +1,20 @@
+@{
+    var currentStep = ViewData["ReservationStep"] as int? ?? 1;
+    var isComplete = ViewData["ReservationComplete"] as bool? ?? false;
+    var steps = new[] { "Especialidad", "Médico", "Fecha y hora", "Tus datos" };
+}
+
+<nav class="reservation-progress" aria-label="Progreso de la reserva">
+    <ol>
+        @for (var index = 0; index < steps.Length; index++)
+        {
+            var stepNumber = index + 1;
+            var isCurrent = !isComplete && stepNumber == currentStep;
+            var isFinished = isComplete || stepNumber < currentStep;
+            <li class="@(isCurrent ? "is-current" : isFinished ? "is-complete" : "")" aria-current="@(isCurrent ? "step" : null)">
+                <span class="reservation-step-number" aria-hidden="true">@(isFinished ? "✓" : stepNumber.ToString())</span>
+                <span class="reservation-step-label">@steps[index]</span>
+            </li>
+        }
+    </ol>
+</nav>

@@ -6,7 +6,7 @@ namespace CitasMedicas.Web.Modules.CatalogoMedico.Features.RegisterDoctor;
 
 public sealed class RegisterDoctorCommand(CatalogoMedicoDbContext dbContext)
 {
-    public async Task<bool> ExecuteAsync(string name, int specialtyId, CancellationToken cancellationToken = default)
+    public async Task<int?> ExecuteAsync(string name, int specialtyId, CancellationToken cancellationToken = default)
     {
         var specialty = await dbContext.Specialties.AsNoTracking()
             .Where(item => item.Id == specialtyId)
@@ -14,16 +14,17 @@ public sealed class RegisterDoctorCommand(CatalogoMedicoDbContext dbContext)
             .FirstOrDefaultAsync(cancellationToken);
         if (specialty is null)
         {
-            return false;
+            return null;
         }
 
-        dbContext.Doctors.Add(new Doctor
+        var doctor = new Doctor
         {
             Name = name.Trim(),
             SpecialtyName = specialty
-        });
+        };
+        dbContext.Doctors.Add(doctor);
 
         await dbContext.SaveChangesAsync(cancellationToken);
-        return true;
+        return doctor.Id;
     }
 }

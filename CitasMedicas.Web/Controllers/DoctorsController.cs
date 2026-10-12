@@ -29,14 +29,15 @@ public class DoctorsController(
             return await ReturnCreateViewAsync(model, cancellationToken);
         }
 
-        var created = await registerDoctor.ExecuteAsync(model.Name, model.SpecialtyId, cancellationToken);
-        if (!created)
+        var createdDoctorId = await registerDoctor.ExecuteAsync(model.Name, model.SpecialtyId, cancellationToken);
+        if (createdDoctorId is null)
         {
             ModelState.AddModelError(nameof(model.SpecialtyId), "Selecciona una especialidad válida.");
             return await ReturnCreateViewAsync(model, cancellationToken);
         }
 
         TempData["DoctorSuccessMessage"] = $"El médico {model.Name.Trim()} se registró correctamente.";
+        TempData["CreatedDoctorId"] = createdDoctorId.Value;
         return RedirectToAction("Index", "Specialties");
     }
 
