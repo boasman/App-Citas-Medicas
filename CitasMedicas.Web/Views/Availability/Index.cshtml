@@ -3,10 +3,12 @@
 @{
     ViewData["Title"] = "Horarios disponibles";
     var spanishCulture = CultureInfo.GetCultureInfo("es-ES");
+    var specialtyId = ViewData["SpecialtyId"] as int?;
 }
 
 <section class="specialties-page availability-page">
-    <a class="back-link" asp-controller="Specialties" asp-action="Index">← Especialidades</a>
+    <partial name="_ReservationSteps" />
+    <a class="back-link" asp-controller="Specialties" asp-action="Doctors" asp-route-specialtyId="@specialtyId">← Profesionales</a>
     <div class="specialties-heading">
         <p class="eyebrow">@Model.Doctor.SpecialtyName</p>
         <h1>Horarios de @Model.Doctor.Name</h1>

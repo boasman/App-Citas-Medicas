@@ -8,11 +8,15 @@ public class AgendaController(
     RegisterAvailabilityCommand registerAvailability) : Controller
 {
     [HttpGet]
-    public async Task<IActionResult> CreateAvailability(CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateAvailability(int? doctorId, CancellationToken cancellationToken)
     {
+        var doctors = await options.ExecuteAsync(cancellationToken);
         return View(new RegisterAvailabilityViewModel
         {
-            Doctors = await options.ExecuteAsync(cancellationToken)
+            Doctors = doctors,
+            DoctorId = doctorId.HasValue && doctors.Any(doctor => doctor.Id == doctorId.Value)
+                ? doctorId.Value
+                : 0
         });
     }
 
@@ -35,8 +39,11 @@ public class AgendaController(
         switch (result)
         {
             case RegisterAvailabilityResult.Success:
-                TempData["AvailabilityRegistrationMessage"] = "El horario se registró correctamente.";
-                return RedirectToAction(nameof(CreateAvailability));
+                var doctor = (await options.ExecuteAsync(cancellationToken))
+                    .First(item => item.Id == model.DoctorId);
+                TempData["AvailabilityRegistrationMessage"] =
+                    $"Se registró un horario para {doctor.Name}: {model.StartsAt.Value:dd/MM/yyyy 'a las' HH:mm}.";
+                return RedirectToAction(nameof(CreateAvailability), new { doctorId = model.DoctorId });
             case RegisterAvailabilityResult.DoctorNotFound:
                 ModelState.AddModelError(nameof(model.DoctorId), "El médico seleccionado ya no existe.");
                 break;

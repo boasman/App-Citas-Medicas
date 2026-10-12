@@ -73,6 +73,24 @@ body {
 .reservation-form .text-danger { color: #a83232 !important; font-size: .9rem; }
 .reservation-form .select-specialty { max-width: 260px; padding: .75rem 1.1rem; border: 0; border-radius: 9px; background: #176b61; color: white; }
 .reservation-form .select-specialty:hover { background: #10574f; color: white; }
+.reservation-form .form-actions { justify-content: space-between; flex-wrap: wrap; }
+.reservation-form .reservation-back { padding: .65rem 0; border: 0; background: transparent; color: #16796e; font-weight: 650; }
+
+.reservation-progress { margin: 0 0 2.25rem; overflow-x: auto; }
+.reservation-progress ol { display: flex; min-width: 560px; margin: 0; padding: 0; list-style: none; }
+.reservation-progress li { position: relative; display: flex; flex: 1; align-items: center; gap: .65rem; color: #718581; font-size: .9rem; font-weight: 650; }
+.reservation-progress li:not(:last-child)::after { height: 2px; flex: 1; margin: 0 .75rem; background: #dce8e5; content: ""; }
+.reservation-step-number { display: grid; flex: 0 0 2rem; place-items: center; width: 2rem; height: 2rem; border: 2px solid #cbd9d6; border-radius: 50%; background: #fff; color: #718581; font-size: .85rem; }
+.reservation-progress .is-current { color: #145e54; }
+.reservation-progress .is-current .reservation-step-number { border-color: #176b61; background: #176b61; color: #fff; }
+.reservation-progress .is-complete { color: #176b61; }
+.reservation-progress .is-complete .reservation-step-number { border-color: #a8d8ca; background: #e4f5ee; color: #176b61; }
+@media (max-width: 600px) {
+  .reservation-progress { margin-bottom: 1.75rem; }
+  .reservation-progress ol { min-width: 500px; }
+  .reservation-progress li { gap: .45rem; font-size: .82rem; }
+  .reservation-step-number { flex-basis: 1.8rem; width: 1.8rem; height: 1.8rem; }
+}
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
   color: var(--bs-secondary-color);
