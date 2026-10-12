@@ -12,10 +12,12 @@ public class DoctorsController(
     GetDoctorSpecialtyAssignmentOptionsQuery assignmentOptions) : Controller
 {
     [HttpGet]
-    public async Task<IActionResult> Create(CancellationToken cancellationToken)
+    public async Task<IActionResult> Create(string? name, int? specialtyId, CancellationToken cancellationToken)
     {
         return View(new RegisterDoctorViewModel
         {
+            Name = name ?? string.Empty,
+            SpecialtyId = specialtyId ?? 0,
             Specialties = await listSpecialties.ExecuteAsync(cancellationToken)
         });
     }
