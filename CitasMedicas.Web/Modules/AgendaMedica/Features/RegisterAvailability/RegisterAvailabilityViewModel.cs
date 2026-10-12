@@ -9,9 +9,22 @@ public sealed class RegisterAvailabilityViewModel
     [Display(Name = "Médico")]
     public int DoctorId { get; set; }
 
-    [Required(ErrorMessage = "La fecha y la hora son obligatorias.")]
+    public List<AvailabilitySlotInputViewModel> Slots { get; set; } = [];
+
+    public IReadOnlyList<DoctorViewModel> Doctors { get; set; } = [];
+
+    public IReadOnlyList<string> SavedSlots { get; set; } = [];
+
+    public string? SavedSlotsMessage { get; set; }
+}
+
+public sealed class AvailabilitySlotInputViewModel
+{
+    public string Key { get; set; } = Guid.NewGuid().ToString("N");
+
+    [Required(ErrorMessage = "Indica una fecha y hora.")]
     [Display(Name = "Fecha y hora")]
     public DateTime? StartsAt { get; set; }
 
-    public IReadOnlyList<DoctorViewModel> Doctors { get; set; } = [];
+    public string? ErrorMessage { get; set; }
 }
