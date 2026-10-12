@@ -1,14 +1,14 @@
 @model CitasMedicas.Web.Modules.Reservas.Features.BookAppointment.BookAppointmentViewModel
 @{
-    ViewData["Title"] = "Confirmar cita";
+    ViewData["Title"] = "Revisar cita";
 }
 
 <section class="specialties-page availability-page">
     <a class="back-link" asp-action="Index" asp-route-doctorId="@Model.DoctorId">← Volver a los horarios</a>
     <div class="specialties-heading">
         <p class="eyebrow">@Model.Doctor.SpecialtyName</p>
-        <h1>Confirma tu cita</h1>
-        <p class="specialties-intro">@Model.Doctor.Name · @Model.StartsAt.ToString("dddd d 'de' MMMM, HH:mm")</p>
+        <h1>Revisa los datos antes de confirmar</h1>
+        <p class="specialties-intro">Completa tus datos para reservar la cita con @Model.Doctor.Name · @Model.StartsAt.ToString("dddd d 'de' MMMM, HH:mm"). La cita no quedará reservada hasta que confirmes.</p>
     </div>
 
     <form asp-action="Book" method="post" class="specialty-form reservation-form">
@@ -25,7 +25,7 @@
             <input asp-for="PatientEmail" autocomplete="email" class="form-control" />
             <span asp-validation-for="PatientEmail" class="text-danger"></span>
         </div>
-        <button type="submit" class="select-specialty">Confirmar reserva <span aria-hidden="true">→</span></button>
+        <button type="submit" class="select-specialty">Confirmar y reservar cita <span aria-hidden="true">→</span></button>
     </form>
 </section>
 
