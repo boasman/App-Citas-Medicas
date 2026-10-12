@@ -1,5 +1,6 @@
 using CitasMedicas.Web.Modules.AgendaMedica.Features.RegisterAvailability;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace CitasMedicas.Web.Controllers;
 
@@ -11,13 +12,23 @@ public class AgendaController(
     public async Task<IActionResult> CreateAvailability(int? doctorId, CancellationToken cancellationToken)
     {
         var doctors = await options.ExecuteAsync(cancellationToken);
-        return View(new RegisterAvailabilityViewModel
+        var model = new RegisterAvailabilityViewModel
         {
             Doctors = doctors,
             DoctorId = doctorId.HasValue && doctors.Any(doctor => doctor.Id == doctorId.Value)
                 ? doctorId.Value
-                : 0
-        });
+                : 0,
+            Slots = [new AvailabilitySlotInputViewModel()]
+        };
+        if (TempData["AvailabilityRegistrationMessage"] is string message)
+        {
+            model.SavedSlotsMessage = message;
+        }
+        if (TempData["AvailabilityRegistrationSlots"] is string savedSlotsJson)
+        {
+            model.SavedSlots = JsonSerializer.Deserialize<List<string>>(savedSlotsJson) ?? [];
+        }
+        return View(model);
     }
 
     [HttpPost]
@@ -26,33 +37,97 @@ public class AgendaController(
         RegisterAvailabilityViewModel model,
         CancellationToken cancellationToken)
     {
-        if (!ModelState.IsValid)
+        var hasDoctorError = ModelState.TryGetValue(nameof(model.DoctorId), out var doctorState)
+            && doctorState.Errors.Count > 0;
+        if (hasDoctorError || model.DoctorId < 1)
+        {
+            if (!hasDoctorError)
+            {
+                ModelState.AddModelError(nameof(model.DoctorId), "Selecciona un médico.");
+            }
+            return await ReturnCreateAvailabilityViewAsync(model, cancellationToken);
+        }
+
+        model.Slots ??= [];
+        if (model.Slots.Count == 0)
+        {
+            model.Slots.Add(new AvailabilitySlotInputViewModel());
+            ModelState.AddModelError(nameof(model.Slots), "Añade al menos un horario antes de guardar.");
+            return await ReturnCreateAvailabilityViewAsync(model, cancellationToken);
+        }
+
+        var validRows = new List<(AvailabilitySlotInputViewModel Slot, DateTime StartsAt)>();
+        foreach (var slot in model.Slots)
+        {
+            slot.ErrorMessage = null;
+            var key = $"{nameof(model.Slots)}[{slot.Key}].{nameof(slot.StartsAt)}";
+            if (ModelState.TryGetValue(key, out var slotState) && slotState.Errors.Count > 0)
+            {
+                slot.ErrorMessage = slotState.Errors[0].ErrorMessage;
+                continue;
+            }
+
+            if (slot.StartsAt is null)
+            {
+                slot.ErrorMessage = "Indica una fecha y hora.";
+                continue;
+            }
+
+            validRows.Add((slot, slot.StartsAt.Value));
+        }
+
+        if (validRows.Count == 0)
         {
             return await ReturnCreateAvailabilityViewAsync(model, cancellationToken);
         }
 
-        var result = await registerAvailability.ExecuteAsync(
+        var results = await registerAvailability.ExecuteBatchAsync(
             model.DoctorId,
-            model.StartsAt!.Value,
+            validRows.Select(row => row.StartsAt).ToArray(),
             cancellationToken);
-
-        switch (result)
+        if (results.Any(result => result.Result == RegisterAvailabilityResult.DoctorNotFound))
         {
-            case RegisterAvailabilityResult.Success:
-                var doctor = (await options.ExecuteAsync(cancellationToken))
-                    .First(item => item.Id == model.DoctorId);
-                TempData["AvailabilityRegistrationMessage"] =
-                    $"Se registró un horario para {doctor.Name}: {model.StartsAt.Value:dd/MM/yyyy 'a las' HH:mm}.";
-                return RedirectToAction(nameof(CreateAvailability), new { doctorId = model.DoctorId });
-            case RegisterAvailabilityResult.DoctorNotFound:
-                ModelState.AddModelError(nameof(model.DoctorId), "El médico seleccionado ya no existe.");
-                break;
-            case RegisterAvailabilityResult.StartsAtMustBeFuture:
-                ModelState.AddModelError(nameof(model.StartsAt), "Selecciona una fecha y hora futuras.");
-                break;
-            case RegisterAvailabilityResult.Duplicate:
-                ModelState.AddModelError(nameof(model.StartsAt), "Ese médico ya tiene un horario registrado en esa fecha y hora.");
-                break;
+            ModelState.AddModelError(nameof(model.DoctorId), "El médico seleccionado ya no existe.");
+            return await ReturnCreateAvailabilityViewAsync(model, cancellationToken);
+        }
+
+        var savedSlots = new List<string>();
+        var remainingSlots = model.Slots.Where(slot => slot.ErrorMessage is not null).ToList();
+        for (var index = 0; index < validRows.Count; index++)
+        {
+            var (slot, startsAt) = validRows[index];
+            switch (results[index].Result)
+            {
+                case RegisterAvailabilityResult.Success:
+                    savedSlots.Add(startsAt.ToString("dd/MM/yyyy HH:mm"));
+                    break;
+                case RegisterAvailabilityResult.StartsAtMustBeFuture:
+                    slot.ErrorMessage = "Selecciona una fecha y hora futuras.";
+                    remainingSlots.Add(slot);
+                    break;
+                case RegisterAvailabilityResult.Duplicate:
+                    slot.ErrorMessage = "Ese médico ya tiene un horario registrado en esa fecha y hora.";
+                    remainingSlots.Add(slot);
+                    break;
+            }
+        }
+
+        if (savedSlots.Count > 0)
+        {
+            var doctor = (await options.ExecuteAsync(cancellationToken))
+                .First(item => item.Id == model.DoctorId);
+            var noun = savedSlots.Count == 1 ? "horario" : "horarios";
+            var verb = savedSlots.Count == 1 ? "registró" : "registraron";
+            model.SavedSlotsMessage = $"Se {verb} {savedSlots.Count} {noun} para {doctor.Name}.";
+            model.SavedSlots = savedSlots;
+        }
+
+        model.Slots = remainingSlots;
+        if (remainingSlots.Count == 0)
+        {
+            TempData["AvailabilityRegistrationMessage"] = model.SavedSlotsMessage;
+            TempData["AvailabilityRegistrationSlots"] = JsonSerializer.Serialize(savedSlots);
+            return RedirectToAction(nameof(CreateAvailability), new { doctorId = model.DoctorId });
         }
 
         return await ReturnCreateAvailabilityViewAsync(model, cancellationToken);
@@ -63,6 +138,10 @@ public class AgendaController(
         CancellationToken cancellationToken)
     {
         model.Doctors = await options.ExecuteAsync(cancellationToken);
+        if (model.Slots.Count == 0)
+        {
+            model.Slots = [new AvailabilitySlotInputViewModel()];
+        }
         return View("CreateAvailability", model);
     }
 }

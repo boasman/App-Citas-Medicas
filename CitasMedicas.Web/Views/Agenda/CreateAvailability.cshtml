@@ -11,11 +11,22 @@
         <p class="specialties-intro">Añade una fecha y hora para que los pacientes puedan reservar una cita.</p>
     </div>
 
-    @if (TempData["AvailabilityRegistrationMessage"] is string successMessage)
+    @if (!string.IsNullOrWhiteSpace(Model.SavedSlotsMessage))
     {
         <div class="selection-confirmation" role="status">
             <span class="confirmation-icon" aria-hidden="true">✓</span>
-            <span>@successMessage</span>
+            <div>
+                <strong>@Model.SavedSlotsMessage</strong>
+                @if (Model.SavedSlots.Count > 0)
+                {
+                    <ul class="saved-availability-list">
+                        @foreach (var savedSlot in Model.SavedSlots)
+                        {
+                            <li>@savedSlot</li>
+                        }
+                    </ul>
+                }
+            </div>
         </div>
     }
 
@@ -43,13 +54,43 @@
                 <span asp-validation-for="DoctorId" class="field-error"></span>
             </div>
             <div class="form-field">
-                <label asp-for="StartsAt"></label>
-                <input asp-for="StartsAt" type="datetime-local" step="60" class="form-control" />
-                <span asp-validation-for="StartsAt" class="field-error"></span>
+                <span class="availability-slots-label">Horarios</span>
+                <div class="availability-slot-list" id="availability-slot-list">
+                    @foreach (var slot in Model.Slots)
+                    {
+                        var fieldName = $"Slots[{slot.Key}].StartsAt";
+                        var attemptedValue = ViewData.ModelState[fieldName]?.AttemptedValue;
+                        var startsAtValue = attemptedValue ?? slot.StartsAt?.ToString("yyyy-MM-ddTHH:mm");
+                        <div class="availability-slot-row" data-slot-row>
+                            <input type="hidden" name="Slots.Index" value="@slot.Key" />
+                            <input type="hidden" name="Slots[@slot.Key].Key" value="@slot.Key" />
+                            <div class="availability-slot-field">
+                                <label for="slot-@slot.Key">Fecha y hora</label>
+                                <input id="slot-@slot.Key" name="Slots[@slot.Key].StartsAt" type="datetime-local" step="60" value="@startsAtValue" class="form-control" aria-describedby="slot-error-@slot.Key" />
+                                <span class="field-error" id="slot-error-@slot.Key" role="alert">@slot.ErrorMessage</span>
+                            </div>
+                            <button class="remove-availability-slot" type="button" aria-label="Quitar este horario">Quitar</button>
+                        </div>
+                    }
+                </div>
+                <span asp-validation-for="Slots" class="field-error"></span>
+                <button class="add-availability-slot" id="add-availability-slot" type="button">+ Añadir horario</button>
+                <template id="availability-slot-template">
+                    <div class="availability-slot-row" data-slot-row>
+                        <input type="hidden" name="Slots.Index" value="__key__" />
+                        <input type="hidden" name="Slots[__key__].Key" value="__key__" />
+                        <div class="availability-slot-field">
+                            <label for="slot-__key__">Fecha y hora</label>
+                            <input id="slot-__key__" name="Slots[__key__].StartsAt" type="datetime-local" step="60" class="form-control" aria-describedby="slot-error-__key__" />
+                            <span class="field-error" id="slot-error-__key__" role="alert"></span>
+                        </div>
+                        <button class="remove-availability-slot" type="button" aria-label="Quitar este horario">Quitar</button>
+                    </div>
+                </template>
             </div>
             <div class="form-actions">
                 <a class="cancel-link" asp-controller="Specialties" asp-action="Index">Cancelar</a>
-                <button class="submit-specialty" type="submit">Guardar horario</button>
+                <button class="submit-specialty" type="submit">Guardar horarios</button>
             </div>
         </form>
     }
@@ -57,4 +98,24 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        (() => {
+            const list = document.getElementById("availability-slot-list");
+            const template = document.getElementById("availability-slot-template");
+            const addButton = document.getElementById("add-availability-slot");
+            if (!list || !template || !addButton) return;
+
+            let nextKey = 0;
+            addButton.addEventListener("click", () => {
+                const key = `new${Date.now()}${nextKey++}`;
+                list.insertAdjacentHTML("beforeend", template.innerHTML.replaceAll("__key__", key));
+                list.querySelector(`[name="Slots[${key}].StartsAt"]`)?.focus();
+            });
+
+            list.addEventListener("click", event => {
+                const button = event.target.closest(".remove-availability-slot");
+                if (button) button.closest("[data-slot-row]").remove();
+            });
+        })();
+    </script>
 }

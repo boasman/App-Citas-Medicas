@@ -12,8 +12,25 @@ public enum RegisterAvailabilityResult
     Duplicate
 }
 
+public sealed record RegisterAvailabilityItemResult(DateTime StartsAt, RegisterAvailabilityResult Result);
+
 public sealed class RegisterAvailabilityCommand(CatalogoMedicoDbContext dbContext)
 {
+    public async Task<IReadOnlyList<RegisterAvailabilityItemResult>> ExecuteBatchAsync(
+        int doctorId,
+        IReadOnlyList<DateTime> startsAtValues,
+        CancellationToken cancellationToken = default)
+    {
+        var results = new List<RegisterAvailabilityItemResult>(startsAtValues.Count);
+        foreach (var startsAt in startsAtValues)
+        {
+            var result = await ExecuteAsync(doctorId, startsAt, cancellationToken);
+            results.Add(new RegisterAvailabilityItemResult(startsAt, result));
+        }
+
+        return results;
+    }
+
     public async Task<RegisterAvailabilityResult> ExecuteAsync(
         int doctorId,
         DateTime startsAt,
