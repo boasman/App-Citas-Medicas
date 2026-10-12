@@ -53,6 +53,11 @@
                 </select>
                 <span asp-validation-for="DoctorId" class="field-error"></span>
             </div>
+            <section class="doctor-registered-availability" id="doctor-registered-availability" aria-live="polite" aria-busy="false">
+                <h2>Horarios registrados</h2>
+                <p class="registered-availability-message" id="registered-availability-message">Selecciona un médico para consultar sus próximos horarios.</p>
+                <ol class="registered-availability-list" id="registered-availability-list"></ol>
+            </section>
             <div class="form-field">
                 <span class="availability-slots-label">Horarios</span>
                 <div class="availability-slot-list" id="availability-slot-list">
@@ -103,6 +108,10 @@
             const list = document.getElementById("availability-slot-list");
             const template = document.getElementById("availability-slot-template");
             const addButton = document.getElementById("add-availability-slot");
+            const doctorSelect = document.getElementById("DoctorId");
+            const availabilityPanel = document.getElementById("doctor-registered-availability");
+            const availabilityMessage = document.getElementById("registered-availability-message");
+            const availabilityList = document.getElementById("registered-availability-list");
             if (!list || !template || !addButton) return;
 
             let nextKey = 0;
@@ -116,6 +125,48 @@
                 const button = event.target.closest(".remove-availability-slot");
                 if (button) button.closest("[data-slot-row]").remove();
             });
+
+            if (doctorSelect && availabilityPanel && availabilityMessage && availabilityList) {
+                let requestController;
+                const refreshRegisteredAvailability = async () => {
+                    requestController?.abort();
+                    availabilityList.replaceChildren();
+                    if (!doctorSelect.value || doctorSelect.value === "0") {
+                        availabilityMessage.textContent = "Selecciona un médico para consultar sus próximos horarios.";
+                        availabilityPanel.setAttribute("aria-busy", "false");
+                        return;
+                    }
+
+                    const controller = new AbortController();
+                    requestController = controller;
+                    availabilityPanel.setAttribute("aria-busy", "true");
+                    availabilityMessage.textContent = "Consultando horarios...";
+                    try {
+                        const response = await fetch(`@Url.Action("DoctorAvailability", "Agenda")?doctorId=${encodeURIComponent(doctorSelect.value)}`, { signal: controller.signal });
+                        if (!response.ok) throw new Error("No se pudieron consultar los horarios.");
+                        const slots = await response.json();
+                        if (slots.length === 0) {
+                            availabilityMessage.textContent = "Este médico no tiene horarios futuros registrados.";
+                            return;
+                        }
+
+                        availabilityMessage.textContent = "Próximos horarios disponibles y ocupados:";
+                        const formatter = new Intl.DateTimeFormat("es-ES", { dateStyle: "medium", timeStyle: "short" });
+                        for (const slot of slots) {
+                            const item = document.createElement("li");
+                            item.textContent = `${formatter.format(new Date(slot.startsAt))} — ${slot.isOccupied ? "Ocupado" : "Disponible"}`;
+                            availabilityList.append(item);
+                        }
+                    } catch (error) {
+                        if (error.name !== "AbortError") availabilityMessage.textContent = "No se pudieron cargar los horarios. Inténtalo de nuevo.";
+                    } finally {
+                        if (!controller.signal.aborted) availabilityPanel.setAttribute("aria-busy", "false");
+                    }
+                };
+
+                doctorSelect.addEventListener("change", refreshRegisteredAvailability);
+                refreshRegisteredAvailability();
+            }
         })();
     </script>
 }

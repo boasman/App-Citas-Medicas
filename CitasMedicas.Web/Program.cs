@@ -22,6 +22,7 @@ builder.Services.AddScoped<AssignDoctorSpecialtyCommand>();
 builder.Services.AddScoped<GetDoctorSpecialtyAssignmentOptionsQuery>();
 builder.Services.AddScoped<CitasMedicas.Web.Modules.AgendaMedica.Features.GetDoctorAvailability.GetDoctorAvailabilityQuery>();
 builder.Services.AddScoped<GetAvailabilityRegistrationOptionsQuery>();
+builder.Services.AddScoped<GetDoctorRegisteredAvailabilityQuery>();
 builder.Services.AddScoped<RegisterAvailabilityCommand>();
 builder.Services.AddScoped<BookAppointmentCommand>();
 builder.Services.AddScoped<GetAppointmentConfirmationQuery>();

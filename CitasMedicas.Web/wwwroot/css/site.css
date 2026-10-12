@@ -53,6 +53,11 @@ body {
 .form-field label { color: #234541; font-weight: 650; }
 .form-field .form-control { border-color: #d6e3e0; border-radius: 8px; padding: .75rem .85rem; }
 .form-field .form-control:focus { border-color: #57a89c; box-shadow: 0 0 0 .2rem #16847724; }
+.doctor-registered-availability { padding: 1rem 1.15rem; border: 1px solid #dce9e6; border-radius: 10px; background: #f8fbfa; }
+.doctor-registered-availability h2 { margin: 0 0 .35rem; color: #234541; font-size: 1rem; font-weight: 700; }
+.registered-availability-message { margin: 0; color: #607875; }
+.registered-availability-list { display: grid; gap: .3rem; max-height: 13rem; margin: .55rem 0 0; padding-left: 1.3rem; overflow-y: auto; color: #234541; }
+.registered-availability-list li { padding-left: .2rem; }
 .field-error, .validation-summary { color: #a83232; font-size: .9rem; }
 .form-actions { display: flex; justify-content: flex-end; align-items: center; gap: 1.25rem; margin-top: .25rem; }
 .submit-specialty { padding: .75rem 1.1rem; border: 0; border-radius: 9px; background: #176b61; color: white; font-weight: 700; }

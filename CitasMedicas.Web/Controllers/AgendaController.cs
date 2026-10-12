@@ -6,8 +6,21 @@ namespace CitasMedicas.Web.Controllers;
 
 public class AgendaController(
     GetAvailabilityRegistrationOptionsQuery options,
+    GetDoctorRegisteredAvailabilityQuery registeredAvailability,
     RegisterAvailabilityCommand registerAvailability) : Controller
 {
+    [HttpGet]
+    public async Task<IActionResult> DoctorAvailability(int doctorId, CancellationToken cancellationToken)
+    {
+        if (doctorId < 1)
+        {
+            return BadRequest();
+        }
+
+        var slots = await registeredAvailability.ExecuteAsync(doctorId, cancellationToken);
+        return slots is null ? NotFound() : Json(slots);
+    }
+
     [HttpGet]
     public async Task<IActionResult> CreateAvailability(int? doctorId, CancellationToken cancellationToken)
     {
