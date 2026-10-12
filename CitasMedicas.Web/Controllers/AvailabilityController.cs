@@ -62,7 +62,9 @@ public class AvailabilityController(
             DoctorId = doctorId,
             SlotId = slotId,
             Doctor = model.Doctor,
-            StartsAt = slot.StartsAt
+            StartsAt = slot.StartsAt,
+            PatientName = TempData["PendingPatientName"] as string ?? string.Empty,
+            PatientEmail = TempData["PendingPatientEmail"] as string ?? string.Empty
         });
     }
 
@@ -79,7 +81,8 @@ public class AvailabilityController(
         var slot = await availability.FindAvailableSlotAsync(model.DoctorId, model.SlotId, cancellationToken);
         if (slot is null)
         {
-            TempData["AvailabilityMessage"] = "Ese horario ya no está disponible. Elige otra opción.";
+            PreservePatientDetails(model);
+            TempData["AvailabilityMessage"] = "Ese horario ya no está disponible y la cita no se reservó. Elige otro horario.";
             return RedirectToAction(nameof(Index), new { doctorId = model.DoctorId });
         }
 
@@ -107,7 +110,8 @@ public class AvailabilityController(
 
         if (reservationId is null)
         {
-            TempData["AvailabilityMessage"] = "Ese horario acaba de ser reservado. Elige otra opción.";
+            PreservePatientDetails(model);
+            TempData["AvailabilityMessage"] = "Ese horario acaba de ocuparse y la cita no se reservó. Elige otro horario.";
             return RedirectToAction(nameof(Index), new { doctorId = model.DoctorId });
         }
 
@@ -119,5 +123,11 @@ public class AvailabilityController(
     {
         var model = await confirmation.ExecuteAsync(id, cancellationToken);
         return model is null ? NotFound() : View(model);
+    }
+
+    private void PreservePatientDetails(BookAppointmentViewModel model)
+    {
+        TempData["PendingPatientName"] = model.PatientName;
+        TempData["PendingPatientEmail"] = model.PatientEmail;
     }
 }
